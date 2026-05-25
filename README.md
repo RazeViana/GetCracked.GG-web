@@ -8,10 +8,9 @@ The marketing site for [GetCracked.GG](https://getcracked.gg), a fast, low-RAM L
 
 ![Hero — Climb faster. Run lighter.](./docs/screenshots/hero.png)
 
-<p align="center">
-  <img src="./docs/screenshots/performance.png" alt="Performance section — Should run on a toaster." width="49%" />
-  <img src="./docs/screenshots/comparison.png" alt="Comparison table — Same features. None of the bloat." width="49%" />
-</p>
+![Performance section — Should run on a toaster.](./docs/screenshots/performance.png)
+
+![Comparison table — Same features. None of the bloat.](./docs/screenshots/comparison.png)
 
 ---
 
@@ -19,7 +18,7 @@ The marketing site for [GetCracked.GG](https://getcracked.gg), a fast, low-RAM L
 
 A small Next.js 16 marketing site. Single page: hero, trust strip, feature grid, performance benchmark, competitor comparison, download CTA, footer. No CMS, no database, no analytics.
 
-The desktop app it advertises is a separate (currently private) Tauri project. This repo only holds the public landing page — not the app.
+The desktop app it advertises is a separate (currently private) Tauri project. This repo only holds the public landing page — not the app. It's public as a showcase, not as something to clone and run.
 
 ## What makes it interesting
 
@@ -28,43 +27,16 @@ The desktop app it advertises is a separate (currently private) Tauri project. T
 - **Adaptive primary CTA.** The hero's download button reads `navigator.userAgentData` / `navigator.userAgent` at hydration and swaps between "Download for Windows" and "Download for macOS". The download section always shows both Mac (Apple Silicon + Intel) and Windows so nobody has to scroll.
 - **Content is data, not code.** Every section's copy + numbers live in `src/content/`. Adding a feature card, bumping a perf number, or adding a competitor column is a one-file edit — the React components only render.
 
-## Tech stack
+## How it was built
 
 - **Next.js 16** (App Router, server components, Turbopack)
 - **React 19**
-- **Tailwind CSS v4**
+- **Tailwind CSS v4** with a custom design-token layer (glassmorphism panels, OKLCH color space, no third-party UI kit)
 - **TypeScript**
-- No database, no auth, no CMS
+- **Inline SVG icon set** — no icon library
+- No database, no auth, no CMS, no analytics
 
-## Getting started
-
-Prerequisites: Node.js 20 or newer.
-
-```bash
-git clone https://github.com/RazeViana/GetCracked.GG-web.git
-cd GetCracked.GG-web
-npm install
-npm run dev
-```
-
-The dev server runs on http://localhost:3000.
-
-Optional — point the site at a local update proxy:
-
-```bash
-echo "UPDATE_PROXY_URL=http://localhost:8790" > .env.local
-```
-
-If `UPDATE_PROXY_URL` isn't set, the site uses `https://update.getcracked.gg`. If that's unreachable, the site falls back to friendly-slug download links (`/download/windows`, `/download/mac-arm64`, `/download/mac-intel`) and a version of `0.0.0`. The page always renders.
-
-### Scripts
-
-| Command         | What it does                                  |
-| --------------- | --------------------------------------------- |
-| `npm run dev`   | Start the dev server with Turbopack on :3000  |
-| `npm run build` | Production build                              |
-| `npm run start` | Serve the production build                    |
-| `npm run lint`  | ESLint                                        |
+The site is one server-rendered page composed of flat section components in `src/components/landing/`. Marketing copy and numbers live in `src/content/`. Release metadata is fetched server-side from the Rust update proxy and memoized per-request with `React.cache`, then revalidated every 5 minutes via Next's `fetch` cache.
 
 ## Project layout
 
@@ -76,30 +48,12 @@ src/
     Button.tsx        Shared <Button> / <ButtonLink>
     Logo.tsx          Crest mark + wordmark
     icons.tsx         Inline SVG icon set
-  content/            Editable site content — features, trust, perf, comparison
+  content/            Site content — features, trust, perf, comparison
   lib/
     releases.ts       Server-side fetcher for the update proxy
     platform.ts       Browser OS detection helper
     cn.ts             classnames helper
 ```
-
-## Editing content
-
-Common edits are documented in [AGENTS.md](./AGENTS.md). The short version:
-
-| To change…                       | Edit…                          |
-| -------------------------------- | ------------------------------ |
-| A feature card                   | `src/content/features.tsx`     |
-| A trust pillar under the hero    | `src/content/trust.tsx`        |
-| A perf-bench bar or claim        | `src/content/perf-bench.ts`    |
-| The competitor comparison table  | `src/content/comparison.tsx`   |
-| The displayed version            | Cut a new app release — the site picks it up automatically |
-
-## Deployment
-
-The site is a vanilla Next.js 16 app and deploys to any platform that supports it. The production site lives at [getcracked.gg](https://getcracked.gg).
-
-The only runtime dependency is the update proxy at `update.getcracked.gg`. If that's reachable, the site shows the live version and links to signed download URLs. If it's not, the site renders fine with fallback links and a `0.0.0` version pill.
 
 ## License
 
