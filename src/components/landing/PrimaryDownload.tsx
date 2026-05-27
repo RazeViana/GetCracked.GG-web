@@ -1,7 +1,7 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
-import { ButtonLink } from "@/components/Button";
+import { DownloadLink } from "@/components/DownloadLink";
 import { Apple, Windows } from "@/components/icons";
 import { detectPlatform } from "@/lib/platform";
 
@@ -33,7 +33,12 @@ export function PrimaryDownload({ windowsUrl, macUrl, version }: Props) {
   const Icon = isMac ? Apple : Windows;
 
   return (
-    <ButtonLink variant="primary" size="lg" href={url}>
+    <DownloadLink
+      platform={isMac ? "macArm64" : "windows"}
+      href={url}
+      version={version}
+      source="hero"
+    >
       <Icon size={18} />
       {label}
       {version && (
@@ -41,6 +46,6 @@ export function PrimaryDownload({ windowsUrl, macUrl, version }: Props) {
           v{version}
         </span>
       )}
-    </ButtonLink>
+    </DownloadLink>
   );
 }

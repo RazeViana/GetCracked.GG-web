@@ -1,4 +1,4 @@
-import { ButtonLink } from "@/components/Button";
+import { DownloadLink } from "@/components/DownloadLink";
 import { Apple, Windows } from "@/components/icons";
 import { DIRECT_DOWNLOAD_URLS, getLatestRelease } from "@/lib/releases";
 
@@ -29,21 +29,38 @@ export async function FinalCta() {
           runes will already be there.
         </p>
         <div className="flex flex-wrap justify-center gap-3">
-          <ButtonLink variant="primary" size="lg" href={windowsUrl}>
+          <DownloadLink
+            platform="windows"
+            href={windowsUrl}
+            version={version}
+            source="final-cta"
+          >
             <Windows size={16} />
             Download for Windows
             <span className="ml-1 font-mono text-[11px] font-normal opacity-70">
               v{version}
             </span>
-          </ButtonLink>
-          <ButtonLink variant="glass" size="lg" href={macArm64Url}>
+          </DownloadLink>
+          <DownloadLink
+            platform="macArm64"
+            href={macArm64Url}
+            version={version}
+            source="final-cta"
+            variant="glass"
+          >
             <Apple size={16} />
             macOS (Apple Silicon)
-          </ButtonLink>
-          <ButtonLink variant="glass" size="lg" href={macIntelUrl}>
+          </DownloadLink>
+          <DownloadLink
+            platform="macIntel"
+            href={macIntelUrl}
+            version={version}
+            source="final-cta"
+            variant="glass"
+          >
             <Apple size={16} />
             macOS (Intel)
-          </ButtonLink>
+          </DownloadLink>
         </div>
       </div>
     </section>
